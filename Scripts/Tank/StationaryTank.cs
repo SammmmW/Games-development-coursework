@@ -33,7 +33,10 @@ public class StationaryTank : MonoBehaviour
         }
         else
         {
-            Debug.Log("Idle");
+            if (hasFired)
+            {
+                hasFired = false;
+            }
         }
     }
 }
