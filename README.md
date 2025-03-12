@@ -15,3 +15,4 @@ The required folders are as follows:
 - Scripts
 - Sprites
 - Every .meta file (don't go in folders)
+Additionally, for the AI to work you will need to import Unity's AI Navigation package, as this folder is also too big to upload to Github
