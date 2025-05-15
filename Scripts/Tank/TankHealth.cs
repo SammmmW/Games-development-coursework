@@ -13,7 +13,9 @@ public class TankHealth : MonoBehaviour
     private AudioSource m_ExplosionAudio;          
     private ParticleSystem m_ExplosionParticles;   
     private float m_CurrentHealth;  
-    private bool m_Dead;            
+    private bool m_Dead;
+    public LevelClear enemyCounter;
+    [SerializeField] private TankHealth playerHealth;
 
 
     private void Awake()
@@ -28,6 +30,16 @@ public class TankHealth : MonoBehaviour
     private void OnEnable()
     {
         m_CurrentHealth = m_StartingHealth;
+        if (playerHealth != null && VariableManager.Instance.startingHealth < 100.0f)
+        {
+            VariableManager.Instance.currentHealth = m_CurrentHealth;
+            VariableManager.Instance.startingHealth = m_StartingHealth;
+        }
+        else if (playerHealth != null)
+        {
+            m_CurrentHealth = VariableManager.Instance.currentHealth;
+            m_StartingHealth = VariableManager.Instance.startingHealth;
+        }
         m_Dead = false;
 
         SetHealthUI();
@@ -38,7 +50,34 @@ public class TankHealth : MonoBehaviour
     {
         // Adjust the tank's current health, update the UI based on the new health and check whether or not the tank is dead.
         m_CurrentHealth -= amount;
+        if (playerHealth != null)
+        {
+            VariableManager.Instance.currentHealth = m_CurrentHealth;
+        }
         //update the UI
+        SetHealthUI();
+    }
+
+    public void Recover()
+    {
+        m_CurrentHealth += 50.0f;
+        SetHealthUI();
+    }
+
+    public void IncreaseMaxHealth()
+    {
+        float temp = m_StartingHealth;
+        m_StartingHealth = m_StartingHealth * 1.3f;
+        if (playerHealth != null)
+        {
+            VariableManager.Instance.startingHealth = m_StartingHealth;
+        }
+        float topup = m_StartingHealth - temp;
+        m_CurrentHealth += topup;
+        if (playerHealth != null)
+        {
+            VariableManager.Instance.currentHealth = m_CurrentHealth;
+        }
         SetHealthUI();
     }
 
@@ -66,7 +105,7 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.gameObject.SetActive(true);
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
-
         gameObject.SetActive(false);
+        enemyCounter.trackEnemiesDefeated();
     }
 }

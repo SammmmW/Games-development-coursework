@@ -3,7 +3,8 @@
 public class TankMovement : MonoBehaviour
 {
     public int m_PlayerNumber = 1;         
-    public float m_Speed = 12f;            
+    public float m_Speed = 12f;
+    public float modifier = 1f;
     public float m_TurnSpeed = 180f;       
     public AudioSource m_MovementAudio;    
     public AudioClip m_EngineIdling;       
@@ -16,7 +17,8 @@ public class TankMovement : MonoBehaviour
     private Rigidbody m_Rigidbody;         
     private float m_MovementInputValue;    
     private float m_TurnInputValue;        
-    private float m_OriginalPitch;         
+    private float m_OriginalPitch;
+    [SerializeField] private TankMovement playerMovement;
 
 
     private void Awake()
@@ -30,6 +32,14 @@ public class TankMovement : MonoBehaviour
         m_Rigidbody.isKinematic = false;
         m_MovementInputValue = 0f;
         m_TurnInputValue = 0f;
+        if (playerMovement != null && VariableManager.Instance.speed < 12.0f)
+        {
+            VariableManager.Instance.speed = m_Speed;
+        }
+        else if (playerMovement != null)
+        {
+            m_Speed = VariableManager.Instance.speed;
+        }
     }
 
 
@@ -55,6 +65,18 @@ public class TankMovement : MonoBehaviour
         m_TurnInputValue = Input.GetAxis(m_TurnAxisName);
 
         EngineAudio();
+    }
+
+    public void modifierUpgrade()
+    {
+        modifier = modifier + 0.333f;
+        updateSpeed();
+    }
+
+    public void updateSpeed()
+    {
+        m_Speed = m_Speed * modifier;
+        VariableManager.Instance.speed = m_Speed;
     }
 
 

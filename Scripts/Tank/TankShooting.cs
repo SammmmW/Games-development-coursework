@@ -20,12 +20,23 @@ public class TankShooting : MonoBehaviour
     private bool m_Fired;
     [SerializeField] private float delay = 1.0f;
     private float lastShot;
+    [SerializeField] private TankShooting playerShot;
 
 
     private void OnEnable()
     {
         m_CurrentLaunchForce = m_MinLaunchForce;
         m_AimSlider.value = m_MinLaunchForce;
+        if (playerShot != null && VariableManager.Instance.delay > 1.0f)
+        {
+            VariableManager.Instance.delay = delay;
+            VariableManager.Instance.chargeTime = m_MaxChargeTime;
+        }
+        else if (playerShot != null)
+        {
+            delay = VariableManager.Instance.delay;
+            m_MaxChargeTime = VariableManager.Instance.chargeTime;
+        }
     }
 
 
@@ -99,5 +110,13 @@ public class TankShooting : MonoBehaviour
             // Reset the launch force. This is a precaution in case of missing button events.
             m_CurrentLaunchForce = m_MinLaunchForce;
         }
+    }
+
+    public void chargeUpgrade()
+    {
+        delay = delay - 0.25f;
+        VariableManager.Instance.delay = delay;
+        m_MaxChargeTime = m_MaxChargeTime + 0.25f;
+        VariableManager.Instance.chargeTime = m_MaxChargeTime;
     }
 }
