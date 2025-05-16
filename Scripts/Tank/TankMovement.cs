@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TankMovement : MonoBehaviour
 {
@@ -32,7 +33,7 @@ public class TankMovement : MonoBehaviour
         m_Rigidbody.isKinematic = false;
         m_MovementInputValue = 0f;
         m_TurnInputValue = 0f;
-        if (playerMovement != null && VariableManager.Instance.speed < 12.0f)
+        if (playerMovement != null && SceneManager.GetActiveScene().buildIndex == 0)
         {
             VariableManager.Instance.speed = m_Speed;
         }
@@ -67,15 +68,9 @@ public class TankMovement : MonoBehaviour
         EngineAudio();
     }
 
-    public void modifierUpgrade()
-    {
-        modifier = modifier + 0.333f;
-        updateSpeed();
-    }
-
     public void updateSpeed()
     {
-        m_Speed = m_Speed * modifier;
+        m_Speed = m_Speed + 4.0f;
         VariableManager.Instance.speed = m_Speed;
     }
 

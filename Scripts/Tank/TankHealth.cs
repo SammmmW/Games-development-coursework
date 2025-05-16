@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TankHealth : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class TankHealth : MonoBehaviour
     private bool m_Dead;
     public LevelClear enemyCounter;
     [SerializeField] private TankHealth playerHealth;
+    [SerializeField] private GameObject gameOverMenu;
 
 
     private void Awake()
@@ -30,7 +32,7 @@ public class TankHealth : MonoBehaviour
     private void OnEnable()
     {
         m_CurrentHealth = m_StartingHealth;
-        if (playerHealth != null && VariableManager.Instance.startingHealth < 100.0f)
+        if (playerHealth != null && SceneManager.GetActiveScene().buildIndex == 0)
         {
             VariableManager.Instance.currentHealth = m_CurrentHealth;
             VariableManager.Instance.startingHealth = m_StartingHealth;
@@ -61,19 +63,22 @@ public class TankHealth : MonoBehaviour
     public void Recover()
     {
         m_CurrentHealth += 50.0f;
+        if (m_CurrentHealth > m_StartingHealth)
+        {
+            m_CurrentHealth = m_StartingHealth;
+        }
+        VariableManager.Instance.currentHealth = m_CurrentHealth;
         SetHealthUI();
     }
 
     public void IncreaseMaxHealth()
     {
-        float temp = m_StartingHealth;
-        m_StartingHealth = m_StartingHealth * 1.3f;
+        m_StartingHealth = m_StartingHealth + 30.0f;
         if (playerHealth != null)
         {
             VariableManager.Instance.startingHealth = m_StartingHealth;
         }
-        float topup = m_StartingHealth - temp;
-        m_CurrentHealth += topup;
+        m_CurrentHealth += 30.0f;
         if (playerHealth != null)
         {
             VariableManager.Instance.currentHealth = m_CurrentHealth;
@@ -105,7 +110,15 @@ public class TankHealth : MonoBehaviour
         m_ExplosionParticles.gameObject.SetActive(true);
         m_ExplosionParticles.Play();
         m_ExplosionAudio.Play();
+        if (playerHealth != null)
+        {
+            loadGameOverMenu();
+        }
         gameObject.SetActive(false);
         enemyCounter.trackEnemiesDefeated();
+    }
+    private void loadGameOverMenu()
+    {
+        gameOverMenu.SetActive(true);
     }
 }

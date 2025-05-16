@@ -7,6 +7,6 @@ public class UpgradeSpeed : MonoBehaviour
     [SerializeField] private TankMovement player;
     public void changeSpeed()
     {
-        player.modifierUpgrade();
+        player.updateSpeed();
     }
 }

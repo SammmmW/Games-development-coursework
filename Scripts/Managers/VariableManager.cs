@@ -6,12 +6,14 @@ public class VariableManager : MonoBehaviour
 {
     public static VariableManager Instance;
 
-    public float startingHealth = 1.0f; //needs to just be lower than 100
+    public float startingHealth; 
     public float currentHealth;
-    public float speed = 1.0f;
+    public float speed;
     public float chargeTime;
-    public float delay = 2.0f;
+    public float delay;
     public int level = 1;
+    public int enemiesDefeated = 0;
+    public int enemyGoal = 0;
 
     private void Awake()
     {

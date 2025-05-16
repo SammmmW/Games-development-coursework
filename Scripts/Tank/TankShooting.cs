@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class TankShooting : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class TankShooting : MonoBehaviour
     {
         m_CurrentLaunchForce = m_MinLaunchForce;
         m_AimSlider.value = m_MinLaunchForce;
-        if (playerShot != null && VariableManager.Instance.delay > 1.0f)
+        if (playerShot != null && SceneManager.GetActiveScene().buildIndex == 0)
         {
             VariableManager.Instance.delay = delay;
             VariableManager.Instance.chargeTime = m_MaxChargeTime;
